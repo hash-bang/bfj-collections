@@ -22,7 +22,7 @@ The below example demonstrates how to read in a very large JSON file and emits `
 ```javascript
 bfjc(fs.createReadStream('someBigFile.json'))
 	.on('bfjc', data => ... do something with the object entity ...)
-	.on(bfj.events.end, ()=> ... we've finished reading ...)
+	.on(bfj.events.end, ()=> ... we have finished reading ...)
 ```
 
 
