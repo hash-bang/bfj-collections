@@ -1,0 +1,25 @@
+{
+  "name": "bfj-collections",
+  "version": "0.0.0",
+  "description": "Helper library for BFJ that specializes in arrays of objects",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hash-bang/bfj-collections.git"
+  },
+  "keywords": [
+    "bfj",
+    "json",
+    "big",
+    "data"
+  ],
+  "author": "Matt Carter <m@ttcarter.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hash-bang/bfj-collections/issues"
+  },
+  "homepage": "https://github.com/hash-bang/bfj-collections#readme"
+}
