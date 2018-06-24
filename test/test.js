@@ -3,6 +3,14 @@ var bfjc = require('..');
 var expect = require('chai').expect;
 var Readable = require('stream').Readable;
 
+var str2stream = (str) => {
+	var dataStream = new Readable();
+	dataStream._read = ()=> {};
+	dataStream.push(str);
+	dataStream.push(null);
+	return dataStream;
+};
+
 describe('bfjc(data)', function() {
 
 	var data;
@@ -38,28 +46,31 @@ describe('bfjc(data)', function() {
 		];
 	});
 
-	var dataStr;
-	before('it should convert test data to a string', ()=> {
-		dataStr = JSON.stringify(data);
-	});
-
-	var dataStream;
-	before('it should convert the string into a stream', ()=> {
-		dataStream = new Readable();
-		dataStream._read = ()=> {};
-		dataStream.push(dataStr);
-		dataStream.push(null);
-	});
-
-	var result = [];
+	var results = [];
 	it('should be able to read simple collections', done => {
-		bfjc(dataStream)
-			.on('bfjc', data => result.push(data))
+		bfjc(str2stream(JSON.stringify(data)))
+			.on('bfjc', node => results.push(node))
 			.on(bfj.events.end, ()=> done())
 	});
 
-	it('should have a return of approximately matching original input', ()=> {
-		expect(result).to.deep.equal(data);
+	it('should have a return of matching original input', ()=> {
+		expect(results).to.deep.equal(data);
 	});
 
+});
+
+
+describe('bfjc(data) - use cases', function() {
+
+	it('it should parse data as per https://github.com/hash-bang/bfj-collections/issues/1', done => {
+		var data = [{'foo': 'bar', 'foo2': [1,2,3], 'baz': [{'foo3':'bar2'}]}];
+		var results = [];
+
+		bfjc(str2stream(JSON.stringify(data)))
+			.on('bfjc', node => results.push(node))
+			.on(bfj.events.end, ()=> {
+				expect(results).to.deep.equal(data);
+				done();
+			});
+	});
 });

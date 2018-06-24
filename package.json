@@ -1,6 +1,6 @@
 {
   "name": "bfj-collections",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Helper library for BFJ that specializes in arrays of objects",
   "main": "index.js",
   "scripts": {
@@ -24,9 +24,9 @@
   "homepage": "https://github.com/hash-bang/bfj-collections#readme",
   "devDependencies": {
     "chai": "^4.1.2",
-    "mocha": "^5.0.0"
+    "mocha": "^5.2.0"
   },
   "dependencies": {
-    "bfj": "^5.2.1"
+    "bfj": "^6.1.1"
   }
 }
