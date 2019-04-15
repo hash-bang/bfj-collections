@@ -52,10 +52,8 @@ module.exports = function(stream, options) {
 				var key = stackProp.pop();
 				stackTop[key] = [];
 				stack.push(stackTop[key]);
-				stackTop = stack[stack.length-1];
-			} else {
-				stackTop.push([]);
 			}
+			stackTop = stack[stack.length-1];
 		})
 		.on(bfj.events.endArray, ()=> {
 			stack.pop();
