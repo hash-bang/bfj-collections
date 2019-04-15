@@ -38,13 +38,14 @@ module.exports = function(stream, options) {
 			}
 		})
 		.on(bfj.events.endObject, ()=> {
+			var resume;
 			if (stack.length == 1) {
-				if (settings.pause) stream.pause();
+				if (settings.pause) resume = stream.pause();
 				emitter.emit('bfjc', stack[0]);
 			}
 			stack.pop();
 			stackTop = stack[stack.length-1];
-			if (stack.length == 1 && settings.pause) stream.resume();
+			if (stack.length == 1 && settings.pause) resume();
 		})
 		.on(bfj.events.array, ()=> {
 			if (stackProp.length) {
