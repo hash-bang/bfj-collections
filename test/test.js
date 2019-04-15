@@ -14,7 +14,7 @@ var str2stream = (str) => {
 describe('bfjc(data)', function() {
 
 	var data;
-	before('it should setup test data', ()=> {
+	before('should setup test data', ()=> {
 		data = [
 			{
 				foo: 'Foo1!',
@@ -62,10 +62,20 @@ describe('bfjc(data)', function() {
 
 describe('bfjc(data) - use cases', function() {
 
-	it('it should parse data as per https://github.com/hash-bang/bfj-collections/issues/1', done => {
+	it('should parse data as per https://github.com/hash-bang/bfj-collections/issues/1', done => {
 		var data = [{'foo': 'bar', 'foo2': [1,2,3], 'baz': [{'foo3':'bar2'}]}];
 		var results = [];
 
+		bfjc(str2stream(JSON.stringify(data)))
+			.on('bfjc', node => results.push(node))
+			.on(bfj.events.end, ()=> {
+				expect(results).to.deep.equal(data);
+				done();
+			});
+	});
+
+	it('should parse nested arrays', ()=> {
+		var data = [[[[["Hello"]]]]];
 		bfjc(str2stream(JSON.stringify(data)))
 			.on('bfjc', node => results.push(node))
 			.on(bfj.events.end, ()=> {
