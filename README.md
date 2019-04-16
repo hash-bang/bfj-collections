@@ -33,3 +33,16 @@ bfjc(stream, [options])
 -----------------------
 The main exported function functions exactly the same as [bfj.walk](https://github.com/philbooth/bfj#bfjwalk-stream-options) and takes exactly the same input stream and options.
 See that functions documentation for more details.
+
+Additional options are listed below:
+
+| Option         | Type      | Default | Description                                                      |
+|----------------|-----------|---------|------------------------------------------------------------------|
+| `pause`        | `boolean` | `true`  | Instruct the stream to pause before each `bfjc` emit event       |
+| `allowArrays`  | `boolean` | `false` | Allow nested array objects e.g. `[['One'], [['Two']]]`           |
+| `allowScalars` | `boolean` | `false` | Allow scalar types (strings, numebers, booleans) as object types |
+
+
+**NOTES:**
+
+* The `pause` functionality assumes the events are syncronous not asyncronous. If you wish to wrap pausing in promises or other event driven functionality you will have to add your own code after disabling `pause`

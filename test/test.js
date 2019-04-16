@@ -74,13 +74,26 @@ describe('bfjc(data) - use cases', function() {
 			});
 	});
 
-	it('should parse nested arrays', ()=> {
-		var data = [[[[["Hello"]]]]];
-		bfjc(str2stream(JSON.stringify(data)))
+	it('should parse nested arrays', done => {
+		var data = [['Foo'], ['Bar'], ['Baz']];
+		var results = [];
+		bfjc(str2stream(JSON.stringify(data)), {allowArrays: true})
 			.on('bfjc', node => results.push(node))
 			.on(bfj.events.end, ()=> {
 				expect(results).to.deep.equal(data);
 				done();
 			});
 	});
+
+	it('should cope with an array of strings', done => {
+		var data = ['One', 'Two', 'Three', 'Four', 'Five'];
+		var results = [];
+		bfjc(str2stream(JSON.stringify(data)), {allowScalars: true})
+			.on('bfjc', node => results.push(node))
+			.on(bfj.events.end, ()=> {
+				expect(results).to.deep.equal(data);
+				done();
+			});
+	});
+
 });

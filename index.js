@@ -5,6 +5,8 @@ module.exports = function(stream, options) {
 	var emitter = bfj.walk(stream, options);
 	var settings = {
 		pause: true,
+		allowArrays: false,
+		allowScalars: false,
 		...(options || {}),
 	};
 
@@ -16,6 +18,13 @@ module.exports = function(stream, options) {
 		if (stackProp.length) {
 			var key = stackProp.pop();
 			stackTop[key] = val;
+		} else if (!stackTop) { // Pushing object out of bounds - assume top level scalar
+			if (settings.allowScalars) {
+				var resume;
+				if (settings.pause) resume = stream.pause();
+				emitter.emit('bfjc', val);
+				if (settings.pause) resume();
+			}
 		} else {
 			stackTop.push(val);
 		}
@@ -52,12 +61,20 @@ module.exports = function(stream, options) {
 				var key = stackProp.pop();
 				stackTop[key] = [];
 				stack.push(stackTop[key]);
+			} else if (!stackTop && settings.allowArrays) {
+				stack.push([]);
 			}
 			stackTop = stack[stack.length-1];
 		})
 		.on(bfj.events.endArray, ()=> {
-			stack.pop();
-			stackTop = stack[stack.length-1];
+			if (stack.length == 1) {
+				emitter.emit('bfjc', [].concat(stack[0])); // Copy the array as we're about to wreck the stack pointer which upsets downstream references
+				stack.pop();
+				stackTop = undefined;
+			} else {
+				stack.pop();
+				stackTop = stack[stack.length-1];
+			}
 		})
 		.on(bfj.events.property, prop => {
 			if (!stackTop) return; // Not in read mode
