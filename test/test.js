@@ -96,4 +96,22 @@ describe('bfjc(data) - use cases', function() {
 			});
 	});
 
+	it('should cope with nested empty structures as per https://github.com/hash-bang/bfj-collections/issues/2', done => {
+		var data = [
+			{foo: []},
+			{bar: [{}]},
+			{baz: [[]]},
+			{quz: [{quz2: [{}, {}]}, {quz3: []}]},
+			{flarp: [[], [{}]]},
+		];
+		var results = [];
+
+		bfjc(str2stream(JSON.stringify(data), {allowArrays: true}))
+			.on('bfjc', node => results.push(node))
+			.on(bfj.events.end, ()=> {
+				expect(results).to.deep.equal(data);
+				done();
+			});
+	});
+
 });

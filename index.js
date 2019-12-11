@@ -63,6 +63,10 @@ module.exports = function(stream, options) {
 				stack.push(stackTop[key]);
 			} else if (!stackTop && settings.allowArrays) {
 				stack.push([]);
+			} else if (stack.length > 1 && Array.isArray(stackTop)) {
+				var newArr = [];
+				stackTop.push(newArr);
+				stack.push(stackTop[stackTop.length-1]);
 			}
 			stackTop = stack[stack.length-1];
 		})
