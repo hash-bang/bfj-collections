@@ -20,10 +20,9 @@ module.exports = function(stream, options) {
 			stackTop[key] = val;
 		} else if (!stackTop) { // Pushing object out of bounds - assume top level scalar
 			if (settings.allowScalars) {
-				var resume;
-				if (settings.pause) resume = stream.pause();
+				if (settings.pause) stream.pause();
 				emitter.emit('bfjc', val);
-				if (settings.pause) resume();
+				if (settings.pause && stream.isPaused()) stream.resume();
 			}
 		} else {
 			stackTop.push(val);
@@ -47,14 +46,13 @@ module.exports = function(stream, options) {
 			}
 		})
 		.on(bfj.events.endObject, ()=> {
-			var resume;
 			if (stack.length == 1) {
-				if (settings.pause) resume = stream.pause();
+				if (settings.pause) stream.pause();
 				emitter.emit('bfjc', stack[0]);
 			}
 			stack.pop();
 			stackTop = stack[stack.length-1];
-			if (stack.length == 1 && settings.pause) resume();
+			if (settings.pause && stream.isPaused()) stream.resume();
 		})
 		.on(bfj.events.array, ()=> {
 			if (stackProp.length) {
