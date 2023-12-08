@@ -1,6 +1,9 @@
 var bfj = require('bfj');
 var bfjc = require('..');
-var expect = require('chai').expect;
+var chai = require('chai')
+var spies = require('chai-spies');
+chai.use(spies);
+var expect = chai.expect;
 var Readable = require('stream').Readable;
 
 var str2stream = (str) => {
@@ -55,6 +58,16 @@ describe('bfjc(data)', function() {
 
 	it('should have a return of matching original input', ()=> {
 		expect(results).to.deep.equal(data);
+	});
+
+	it('should emit end', done => {
+		const spyEnd = chai.spy();
+		bfjc(str2stream(JSON.stringify(data)))
+			.on(bfj.events.end, () => {
+				spyEnd();
+				expect(spyEnd).to.have.been.called.once;
+				done();
+			});
 	});
 
 });
