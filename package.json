@@ -1,6 +1,6 @@
 {
   "name": "bfj-collections",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Helper library for BFJ that specializes in arrays of objects",
   "main": "index.js",
   "scripts": {
